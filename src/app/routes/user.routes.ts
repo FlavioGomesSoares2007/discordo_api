@@ -8,12 +8,12 @@ import { AuthMiddleware } from "../middlewares/auth.middleware";
 
 const controller = new UserController();
 
-const Router = express.Router();
+const router = express.Router();
 
-Router.post("/", validarDto(UserDTO), controller.create);
-Router.post("/add/Photo/:id", AuthMiddleware, upload.single("capa"), controller.addPhoto);
-Router.get("/see/data/:id",AuthMiddleware, controller.seeData);
-Router.patch("/update/:id",AuthMiddleware, validarDto(UserUpdateDTO), controller.update);
-Router.delete("/delete/:id",AuthMiddleware, controller.delete);
+router.post("/", validarDto(UserDTO), controller.create);
+router.post("/add/Photo/:id", AuthMiddleware, upload.single("capa"), controller.addPhoto);
+router.get("/see/data/:id",AuthMiddleware, controller.seeData);
+router.patch("/update/:id",AuthMiddleware, validarDto(UserUpdateDTO), controller.update);
+router.delete("/delete/:id",AuthMiddleware, controller.delete);
 
-export default Router;
+export default router;

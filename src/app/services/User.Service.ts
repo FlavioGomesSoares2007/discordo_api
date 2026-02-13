@@ -9,14 +9,23 @@ export class UserService {
   private userRepositorio = AppDataSource.getRepository(User);
 
   async create(dados: UserDTO) {
-    const response = await this.userRepositorio.findOne({
+    const email = await this.userRepositorio.findOne({
       where: {
         email: dados.email,
       },
     });
 
-    if (response) {
-      throw new Error("esse email ja estar em uso");
+    if (email) {
+      throw new Error("esse email já estar em uso");
+    }
+    const nome = await this.userRepositorio.findOne({
+      where: {
+        nome: dados.nome,
+      },
+    });
+
+    if (nome) {
+      throw new Error("esse nome já estar em uso");
     }
     const senhaB = await bcrypt.hash(dados.senha, 10);
 
@@ -58,7 +67,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new Error("usuario não encontrado");
+      throw new Error("usuário não encontrado");
     }
 
     return user;
@@ -69,7 +78,7 @@ export class UserService {
       where: { id_user: id },
     });
     if (!user) {
-      throw new Error("usuario não encontrado");
+      throw new Error("usuário não encontrado");
     }
     this.userRepositorio.merge(user, dados);
 
@@ -84,7 +93,7 @@ export class UserService {
       where: { id_user: id },
     });
     if (!user) {
-      throw new Error("usuario não encontrado");
+      throw new Error("usuário não encontrado");
     }
     const imagem = user.imagem.split("/").slice(-2).join("/").split(".")[0];
     await cloudinary.uploader.destroy(imagem);

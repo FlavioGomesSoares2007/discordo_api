@@ -1,6 +1,8 @@
-import "dotenv/config"
+import "dotenv/config";
 import { DataSource } from "typeorm";
 import { User } from "../models/User.Entity";
+import { FriendRequest } from "../models/friendRequest.entity";
+import { Friends } from "../models/friends.entity";
 
 export const AppDataSource = new DataSource({
   type: "mysql",
@@ -11,7 +13,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_DATABASE,
   synchronize: true,
   logging: true,
-  entities: [User],
+  entities: [User, FriendRequest, Friends],
   subscribers: [],
   migrations: [],
 });

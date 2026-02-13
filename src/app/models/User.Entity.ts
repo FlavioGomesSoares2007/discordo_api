@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { FriendRequest } from "./friendRequest.entity";
+import { Friends } from "./friends.entity";
 
 @Entity("user")
 export class User {
@@ -10,6 +12,7 @@ export class User {
     type: "varchar",
     length: 100,
     nullable: false,
+    unique: true,
   })
   nome!: string;
 
@@ -34,7 +37,19 @@ export class User {
     name: "imagem",
     type: "varchar",
     length: 200,
-    nullable: true
+    nullable: true,
   })
   imagem!: string;
+
+  @OneToMany(() => FriendRequest, (friendRequest) => friendRequest.sender)
+  sentRequests!: FriendRequest;
+
+  @OneToMany(() => FriendRequest, (friendRequest) => friendRequest.recipient)
+  receivedRequests!: FriendRequest;
+
+  @OneToMany(() => Friends, (friends) => friends.user1)
+  friendsAsFirst!: Friends[];
+  
+  @OneToMany(() => Friends, (friendship) => friendship.user2)
+  friendsAsSecond!: Friends[];
 }

@@ -9,15 +9,18 @@ export class UserController {
       const user = await service.create(req.body);
       return res.status(201).json(user);
     } catch (error: any) {
-      if (error.message === "esse email ja estar em uso") {
-        return res.status(409).json({ message: error.message });
+      if (error.message === "esse email já estar em uso") {
+        return res.status(409).json({ message: "esse email já estar em uso" });
+      }
+      if (error.message === "esse nome já estar em uso") {
+        return res.status(409).json({ message: "esse nome já estar em uso" });
       }
       return res.status(500).json({ message: "erro no sistema" });
     }
   }
 
   async addPhoto(req: Request, res: Response): Promise<Response> {
-    const id = Number(req.params.id);
+    const id = Number(req.user.id);
     const file = req.file?.path;
 
     if (isNaN(id)) {
@@ -46,7 +49,7 @@ export class UserController {
   }
 
   async seeData(req: Request, res: Response): Promise<Response> {
-    const id = Number(req.params.id);
+    const id = Number(req.user.id);
     if (isNaN(id)) {
       return res.status(400).json({ message: "ID invalido" });
     }
@@ -54,15 +57,15 @@ export class UserController {
       const user = await service.seedata(id);
       return res.status(200).json(user);
     } catch (error: any) {
-      if (error.message === "usuario não encontrado") {
-        return res.status(404).json({ message: "usuario não encontrado" });
+      if (error.message === "usuário não encontrado") {
+        return res.status(404).json({ message: "usuário não encontrado" });
       }
       return res.status(500).json({ message: "erro no sistema" });
     }
   }
 
   async update(req: Request, res: Response): Promise<Response> {
-    const id = Number(req.params.id);
+    const id = Number(req.user.id);
     const dados = req.body;
     if (isNaN(id)) {
       return res.status(400).json({ message: "ID invalido" });
@@ -71,15 +74,15 @@ export class UserController {
       const response = await service.update(id, dados);
       return res.status(200).json(response);
     } catch (error: any) {
-      if (error.message === "usuario não encontrado") {
-        return res.status(404).json({ message: "usuario não encontrado" });
+      if (error.message === "usuário não encontrado") {
+        return res.status(404).json({ message: "usuário não encontrado" });
       }
       return res.status(500).json({ message: "error no sistema" });
     }
   }
 
   async delete(req: Request, res: Response): Promise<Response> {
-    const id = Number(req.params.id);
+    const id = Number(req.user.id);
     const dados = req.body;
     if (isNaN(id)) {
       return res.status(400).json({ message: "ID invalido" });
@@ -88,8 +91,8 @@ export class UserController {
       const user = await service.delete(id);
       return res.status(200).json(user);
     } catch (error: any) {
-      if (error.message === "usuario não encontrado") {
-        return res.status(404).json({ message: "usuario não encontrado" });
+      if (error.message === "usuário não encontrado") {
+        return res.status(404).json({ message: "usuário não encontrado" });
       }
       return res.status(500).json({ message: "error no sistema" });
     }
