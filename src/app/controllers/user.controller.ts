@@ -55,7 +55,12 @@ export class UserController {
     }
     try {
       const user = await service.seedata(id);
-      return res.status(200).json(user);
+      const { friendsAsFirst, friendsAsSecond, ...userDate } = user;
+      const friends = [...friendsAsFirst, ...friendsAsSecond];
+      return res.status(200).json({
+        ...userDate,
+        friends,
+      });
     } catch (error: any) {
       if (error.message === "usuário não encontrado") {
         return res.status(404).json({ message: "usuário não encontrado" });

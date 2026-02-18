@@ -11,9 +11,9 @@ const controller = new UserController();
 const router = express.Router();
 
 router.post("/", validarDto(UserDTO), controller.create);
-router.post("/add/Photo/:id", AuthMiddleware, upload.single("capa"), controller.addPhoto);
-router.get("/see/data/:id",AuthMiddleware, controller.seeData);
-router.patch("/update/:id",AuthMiddleware, validarDto(UserUpdateDTO), controller.update);
-router.delete("/delete/:id",AuthMiddleware, controller.delete);
+router.post("/add/Photo/", AuthMiddleware, upload.single("capa"), controller.addPhoto);
+router.get("/see/data/",AuthMiddleware, controller.seeData);
+router.patch("/update/",AuthMiddleware, validarDto(UserUpdateDTO), controller.update);
+router.delete("/delete/",AuthMiddleware, controller.delete);
 
 export default router;

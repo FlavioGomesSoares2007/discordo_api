@@ -64,6 +64,12 @@ export class UserService {
   async seedata(id_user: number): Promise<User> {
     const user = await this.userRepositorio.findOne({
       where: { id_user: id_user },
+      relations: [
+        "friendsAsFirst",
+        "friendsAsSecond",
+        "sentRequests",
+        "receivedRequests",
+      ],
     });
 
     if (!user) {

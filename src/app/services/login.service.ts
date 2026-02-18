@@ -26,7 +26,7 @@ export class LoginService {
     const token = jwt.sign(
       { id: user.id_user, email: user.email },
       process.env.ASSINATURA_JWT!,
-      { expiresIn: "1h" },
+      { expiresIn: "24h" },
     );
 
     return token

@@ -42,10 +42,10 @@ export class User {
   imagem!: string;
 
   @OneToMany(() => FriendRequest, (friendRequest) => friendRequest.sender)
-  sentRequests!: FriendRequest;
+  sentRequests!: FriendRequest[];
 
   @OneToMany(() => FriendRequest, (friendRequest) => friendRequest.recipient)
-  receivedRequests!: FriendRequest;
+  receivedRequests!: FriendRequest[];
 
   @OneToMany(() => Friends, (friends) => friends.user1)
   friendsAsFirst!: Friends[];

@@ -1,22 +1,31 @@
-import express  from "express";
-import cors from "cors"
-import"dotenv/config"
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
 
-import user from "./app/routes/user.routes"
-import login from "./app/routes/login.routes"
-import order from "./app/routes/order.routes"
+import http from "http";
+import { Server } from "socket.io";
+import routes from "./app/routes/index.routes";
+import { socketEvents } from "./app/controllers/socketEvents.controller";
 
-const app = express()
-const port = process.env.PORT_WEB
+const app = express();
+const server = http.createServer(app);
+const port = process.env.PORT_WEB;
 
+app.use(cors());
+app.use(express.json());
 
-app.use(cors())
-app.use(express.json())
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST", "DELETE", "PATCH"],
+  },
+});
 
-app.use("/user", user)
-app.use("/login", login)
-app.use("/order", order)
+app.set("io", io)
+app.use(routes);
 
-app.listen(port, ()=>{
-    console.log(`Discordo no ar 🚀   http://localhost:${port}`)
-})
+socketEvents(io)
+
+server.listen(port, () => {
+  console.log(`Discordo no ar 🚀   http://localhost:${port}`);
+});
