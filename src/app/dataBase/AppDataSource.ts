@@ -3,6 +3,7 @@ import { DataSource } from "typeorm";
 import { User } from "../models/User.Entity";
 import { FriendRequest } from "../models/friendRequest.entity";
 import { Friends } from "../models/friends.entity";
+import { Message } from "../models/message.entity";
 
 export const AppDataSource = new DataSource({
   type: "mysql",
@@ -13,7 +14,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_DATABASE,
   synchronize: true,
   logging: true,
-  entities: [User, FriendRequest, Friends],
+  entities: [User, FriendRequest, Friends, Message],
   subscribers: [],
   migrations: [],
 });
