@@ -61,22 +61,31 @@ export class UserService {
     return await this.userRepositorio.save(user);
   }
 
-  async seedata(id_user: number): Promise<User> {
+  async seedata(id_user: number) {
     const user = await this.userRepositorio.findOne({
       where: { id_user: id_user },
-      relations: [
-        "friendsAsFirst",
-        "friendsAsSecond",
-        "sentRequests",
-        "receivedRequests",
-      ],
+      relations: ["friendsAsFirst.user2", "friendsAsSecond.user1"],
     });
 
-    if (!user) {
-      throw new Error("usuário não encontrado");
-    }
+    if (!user) throw new Error("Usuário não encontrado");
 
-    return user;
+    const amigosTratados = [
+      ...user.friendsAsFirst.map((dados: any) => ({
+        id_amigo: dados.user2.id_user,
+        nome: dados.user2.nome,
+        imagem: dados.user2.imagem,
+      })),
+      ...user.friendsAsSecond.map((dados: any) => ({
+        id_amigo: dados.user1.id_user,
+        nome: dados.user1.nome,
+        imagem: dados.user1.imagem,
+      })),
+    ];
+
+    return {
+      ...user,
+      friends: amigosTratados,
+    };
   }
 
   async update(id: number, dados: UserUpdateDTO): Promise<User> {

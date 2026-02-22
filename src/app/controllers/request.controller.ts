@@ -63,10 +63,18 @@ export class RequestController {
       const io = req.app.get("io");
 
       io.to(`user_${response.id_user_1}`).emit("newFriend", {
-        newFriend: response.dataUser2,
+        newFriend: {
+          id_user: response.id_user_2,
+          nome: response.dataUser2?.nome,
+          imagem: response.dataUser2?.imagem,
+        },
       });
       io.to(`user_${response.id_user_2}`).emit("newFriend", {
-        newFriend: response.dataUser1,
+        newFriend: {
+          id_user: response.id_user_1, 
+          nome: response.dataUser1?.nome,
+          imagem: response.dataUser1?.imagem,
+        },
       });
       return res.status(200).json({ message: "pedido aceito!" });
     } catch (error: any) {

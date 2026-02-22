@@ -6,6 +6,7 @@ export class UserDTO {
   nome!: string;
 
   @IsEmail({}, { message: 'O e-mail deve ser um endereço válido' })
+  @IsNotEmpty({ message: 'O Email não pode estar vazio' })
   email!: string;
 
   @IsString()
