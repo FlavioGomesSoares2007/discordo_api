@@ -15,33 +15,13 @@ export class RequestController {
       const response = await service.create(id, nome);
       const io = req.app.get("io");
 
-      if (response.type === "accept") {
-        io.to(`user_${response.sender}`).emit("friend_accepted", {
-          message: response.message,
-          friend: response.data,
+      if (response.type === "send") {
+        io.to(`user_${response.id_sender}`).emit("request_sent", {
+          recipient: response.recipient,
         });
 
-        io.to(`user_${response.recipient}`).emit("friend_accepted", {
-          message: response.message,
-          friend: response.data,
-        });
-      } else if (response.type === "send") {
-        io.to(`user_${response.sender}`).emit("request_sent", {
-          message: response.message,
-          request: response.data,
-        });
-        io.to(`user_${response.recipient}`).emit("request_sent", {
-          message: response.message,
-          request: response.data,
-        });
-      } else if (response.type === "friends") {
-        io.to(`user_${response.sender}`).emit("friends", {
-          message: response.message,
-          Friends: response.friends,
-        });
-      } else if (response.type === "send_request") {
-        io.to(`user_${response.sender}`).emit("send_request", {
-          message: response.message,
+        io.to(`user_${response.id_recipient}`).emit("request_sent", {
+          sender: response.sender,
         });
       }
       return res.status(200).json(response.message);
@@ -71,7 +51,7 @@ export class RequestController {
       });
       io.to(`user_${response.id_user_2}`).emit("newFriend", {
         newFriend: {
-          id_user: response.id_user_1, 
+          id_user: response.id_user_1,
           nome: response.dataUser1?.nome,
           imagem: response.dataUser1?.imagem,
         },
@@ -99,6 +79,8 @@ export class RequestController {
       });
       io.to(`user_${response.recipient}`).emit("requestRemoved", {
         id: response.id,
+        id_sender: response.sender,
+        id_recipient: response.recipient,
       });
 
       return res.status(200).json({ message: "Pedido removido com sucesso" });

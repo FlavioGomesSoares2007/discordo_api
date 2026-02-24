@@ -1,4 +1,13 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn,} from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { User } from "./User.Entity";
 
 @Entity("message")
 export class Message {
@@ -11,9 +20,9 @@ export class Message {
   @Column({ name: "id_recipient", type: "int", nullable: false })
   id_recipient!: number;
 
-  @Column({name:"message", type:"text", nullable:false})
-  message!:string
+  @Column({ name: "message", type: "text", nullable: false })
+  message!: string;
 
-  @CreateDateColumn({name:"date", type:"timestamp"})
-  data!:Date
+  @CreateDateColumn({ name: "date", type: "timestamp" })
+  data!: Date;
 }

@@ -64,7 +64,12 @@ export class UserService {
   async seedata(id_user: number) {
     const user = await this.userRepositorio.findOne({
       where: { id_user: id_user },
-      relations: ["friendsAsFirst.user2", "friendsAsSecond.user1"],
+      relations: [
+        "friendsAsFirst.user2",
+        "friendsAsSecond.user1",
+        "receivedRequests.sender",
+        "sentRequests.recipient",
+      ],
     });
 
     if (!user) throw new Error("Usuário não encontrado");
@@ -82,9 +87,29 @@ export class UserService {
       })),
     ];
 
+    const pedidosRecebidos = [
+      ...user.receivedRequests.map((dados) => ({
+        id_friend_Request: dados.id_friend_Request,
+        id_sender: dados.sender.id_user,
+        nome: dados.sender.nome,
+        imagem: dados.sender.imagem,
+      })),
+    ];
+
+    const pedidosEnviados = [
+      ...user.sentRequests.map((dados) => ({
+        id_friend_Request: dados.id_friend_Request,
+        id_recipient: dados.recipient.id_user,
+        nome: dados.recipient.nome,
+        imagem: dados.recipient.imagem,
+      })),
+    ];
+
     return {
       ...user,
       friends: amigosTratados,
+      sender: pedidosEnviados,
+      recipient: pedidosRecebidos,
     };
   }
 

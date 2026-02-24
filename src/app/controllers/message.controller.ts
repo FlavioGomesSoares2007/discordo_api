@@ -27,4 +27,21 @@ export class MessageController {
       return res.status(500).json({ message: "error no sistema" });
     }
   }
+
+  async searchMessages(req: Request, res: Response): Promise<Response> {
+    const id_sender = Number(req.user.id);
+    if (isNaN(id_sender)) {
+      return res.status(400).json({ message: "ID invalido" });
+    }
+
+    try {
+      const response = await service.searchMessages(id_sender);
+      return res.status(200).json(response);
+    } catch (error: any) {
+      if (error.message === "usuário não encontrado") {
+        return res.status(404).json({ message: error.message });
+      }
+      return res.status(500).json({ message: "error no sistema" });
+    }
+  }
 }

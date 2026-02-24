@@ -1,3 +1,4 @@
+import { send } from "process";
 import { AppDataSource } from "../dataBase/AppDataSource";
 import { RequestdDto } from "../Dto/request/request.dto";
 import { FriendRequest } from "../models/friendRequest.entity";
@@ -31,9 +32,7 @@ export class RequestService {
 
     if (sendRequest) {
       return {
-        type: "send_request",
         message: "Você já mandou um convite!",
-        sender:id_sender
       };
     }
 
@@ -52,8 +51,8 @@ export class RequestService {
         type: "accept",
         message: "Vocês agora são amigos!",
         data: friends,
-        sender:id_sender,
-        recipient:user.id_user
+        sender: id_sender,
+        recipient: user.id_user,
       };
     }
 
@@ -76,7 +75,7 @@ export class RequestService {
         type: "friends",
         message: "vocês já são amigos!",
         friends: friends1 || friends2,
-        sender: id_sender
+        sender: id_sender,
       };
     }
 
@@ -84,14 +83,34 @@ export class RequestService {
       id_sender: id_sender,
       id_recipient: user.id_user,
     });
-    await this.requestRepositorio.save(sentRequest);
+    const pedidoSalvo = await this.requestRepositorio.save(sentRequest);
+
+    const sender = await this.userRepositorio.findOne({
+      where: { id_user: id_sender },
+    });
+
+    const recipient = await this.userRepositorio.findOne({
+      where: { id_user: user.id_user },
+    });
+
     return {
       type: "send",
-      message: "Pedido enviado com sucesso!",
-      data: sentRequest,
-      sender:sentRequest.id_sender,
-      recipient: sentRequest.id_recipient
+      message: [sender, recipient],
+      id_sender: pedidoSalvo.id_sender,
+      id_recipient: pedidoSalvo.id_recipient,
 
+      sender: {
+        id_friend_Request: pedidoSalvo.id_friend_Request,
+        id_user: sender?.id_user,
+        nome: sender?.nome,
+        imagem: sender?.imagem,
+      },
+      recipient: {
+        id_friend_Request: pedidoSalvo.id_friend_Request,
+        id_user: recipient?.id_user,
+        nome: recipient?.nome,
+        imagem: recipient?.imagem,
+      },
     };
   }
 
@@ -126,24 +145,24 @@ export class RequestService {
   }
 
   async delete(id: number) {
-  const request = await this.requestRepositorio.findOne({
-    where: { id_friend_Request: id },
-  });
+    const request = await this.requestRepositorio.findOne({
+      where: { id_friend_Request: id },
+    });
 
-  if (!request) {
-    throw new Error("pedido não encontrado");
+    if (!request) {
+      throw new Error("pedido não encontrado");
+    }
+
+    const idDeletado = request.id_friend_Request;
+    const idSender = request.id_sender;
+    const idRecipient = request.id_recipient;
+
+    await this.requestRepositorio.remove(request);
+
+    return {
+      id: idDeletado,
+      sender: idSender,
+      recipient: idRecipient,
+    };
   }
-
-  const idDeletado = request.id_friend_Request;
-  const idSender = request.id_sender;
-  const idRecipient = request.id_recipient;
-
-  await this.requestRepositorio.remove(request);
-
-  return {
-    id: idDeletado,
-    sender: idSender,
-    recipient: idRecipient
-  };
-}
 }

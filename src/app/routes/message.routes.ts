@@ -4,9 +4,10 @@ import { AuthMiddleware } from "../middlewares/auth.middleware";
 import { validarDto } from "../middlewares/validarDto.middleware";
 import { MessageDto } from "../Dto/message/message.dto";
 
-const router = express.Router()
-const controller = new MessageController()
+const router = express.Router();
+const controller = new MessageController();
 
-router.post("/:id", AuthMiddleware, validarDto(MessageDto), controller.create)
+router.post("/:id", AuthMiddleware, validarDto(MessageDto), controller.create);
+router.get("/", AuthMiddleware, controller.searchMessages);
 
-export default router
+export default router;

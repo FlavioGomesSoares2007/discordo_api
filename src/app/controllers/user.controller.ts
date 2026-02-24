@@ -55,7 +55,7 @@ export class UserController {
     }
     try {
       const user = await service.seedata(id);
-      const { friendsAsFirst, friendsAsSecond, ...userDate } = user;
+      const { friendsAsFirst, friendsAsSecond, receivedRequests, sentRequests, ...userDate } = user;
       return res.status(200).json({
         ...userDate,
       });

@@ -1,6 +1,13 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { FriendRequest } from "./friendRequest.entity";
 import { Friends } from "./friends.entity";
+import { Message } from "./message.entity";
 
 @Entity("user")
 export class User {
@@ -49,7 +56,7 @@ export class User {
 
   @OneToMany(() => Friends, (friends) => friends.user1)
   friendsAsFirst!: Friends[];
-  
+
   @OneToMany(() => Friends, (friendship) => friendship.user2)
   friendsAsSecond!: Friends[];
 }
