@@ -33,7 +33,11 @@ export class UserController {
 
     try {
       const updatedUser = await service.addPhoto(id, file);
-      return res.status(200).json(updatedUser);
+      const io = req.app.get("io");
+      const { senha, ...resto } = updatedUser;
+      io.emit("update", resto);
+
+      return res.status(200).json(resto);
     } catch (error: any) {
       if (error.message === "Usuário não encontrado.") {
         return res.status(404).json({ message: error.message });
@@ -55,7 +59,13 @@ export class UserController {
     }
     try {
       const user = await service.seedata(id);
-      const { friendsAsFirst, friendsAsSecond, receivedRequests, sentRequests, ...userDate } = user;
+      const {
+        friendsAsFirst,
+        friendsAsSecond,
+        receivedRequests,
+        sentRequests,
+        ...userDate
+      } = user;
       return res.status(200).json({
         ...userDate,
       });
@@ -75,7 +85,10 @@ export class UserController {
     }
     try {
       const response = await service.update(id, dados);
-      return res.status(200).json(response);
+      const io = req.app.get("io");
+      const { senha, ...resto } = response;
+      io.emit("update", resto);
+      return res.status(200).json(resto);
     } catch (error: any) {
       if (error.message === "usuário não encontrado") {
         return res.status(404).json({ message: "usuário não encontrado" });
