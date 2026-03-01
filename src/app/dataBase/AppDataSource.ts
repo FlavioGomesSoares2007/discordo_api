@@ -17,6 +17,11 @@ export const AppDataSource = new DataSource({
   entities: [User, FriendRequest, Friends, Message],
   subscribers: [],
   migrations: [],
+  extra: {
+    ssl: {
+      rejectUnauthorized: true,
+    },
+  },
 });
 
 try {

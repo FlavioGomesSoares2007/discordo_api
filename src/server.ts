@@ -11,20 +11,25 @@ const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT_WEB;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://discordo-cliente.onrender.com",
+    methods: ["GET", "POST", "DELETE", "PATCH"],
+  }),
+);
 app.use(express.json());
 
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: "https://discordo-cliente.onrender.com",
     methods: ["GET", "POST", "DELETE", "PATCH"],
   },
 });
 
-app.set("io", io)
+app.set("io", io);
 app.use(routes);
 
-socketEvents(io)
+socketEvents(io);
 
 server.listen(port, () => {
   console.log(`Discordo no ar 🚀   http://localhost:${port}`);
