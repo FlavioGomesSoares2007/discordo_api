@@ -80,20 +80,28 @@ export class UserController {
   async update(req: Request, res: Response): Promise<Response> {
     const id = Number(req.user.id);
     const dados = req.body;
+    const file = req.file?.path;
+
     if (isNaN(id)) {
       return res.status(400).json({ message: "ID invalido" });
     }
+
     try {
-      const response = await service.update(id, dados);
+      const response = await service.update(id, dados, file);
+
       const io = req.app.get("io");
-      const { senha, ...resto } = response;
-      io.emit("update", resto);
-      return res.status(200).json(resto);
+
+      
+
+      io.emit("update", response);
+
+      return res.status(200).json(response);
     } catch (error: any) {
       if (error.message === "usuário não encontrado") {
         return res.status(404).json({ message: "usuário não encontrado" });
       }
-      return res.status(500).json({ message: "error no sistema" });
+      console.error(error);
+      return res.status(500).json({ message: "erro no sistema" });
     }
   }
 

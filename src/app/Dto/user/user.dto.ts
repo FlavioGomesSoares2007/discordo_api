@@ -1,4 +1,4 @@
-import { IsEmail, IsString, IsNotEmpty, MinLength, IsOptional, IsInt } from 'class-validator';
+import { IsEmail, IsString, IsNotEmpty, MinLength } from 'class-validator';
 
 export class UserDTO {
   @IsString({ message: 'O nome deve ser uma string' })

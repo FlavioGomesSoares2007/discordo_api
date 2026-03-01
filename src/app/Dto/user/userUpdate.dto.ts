@@ -20,4 +20,9 @@ export class UserUpdateDTO {
   @IsOptional()
   @MinLength(6, { message: "A senha deve ter no mínimo 6 caracteres" })
   senha?: string;
+
+  @IsString({ message: "O imagem deve ser uma string" })
+  @IsString()
+  @IsOptional()
+  imagem?: string;
 }

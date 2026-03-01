@@ -113,17 +113,36 @@ export class UserService {
     };
   }
 
-  async update(id: number, dados: UserUpdateDTO): Promise<User> {
+  async update(
+    id: number,
+    dados: UserUpdateDTO,
+    novaImg?: string,
+  ): Promise<User> {
     const user = await this.userRepositorio.findOne({
       where: { id_user: id },
     });
+
     if (!user) {
       throw new Error("usuário não encontrado");
     }
-    this.userRepositorio.merge(user, dados);
 
     if (dados.senha) {
-      user.senha = await bcrypt.hash(dados.senha, 10);
+      dados.senha = await bcrypt.hash(dados.senha, 10);
+    }
+
+    this.userRepositorio.merge(user, dados);
+
+    if (novaImg && novaImg !== user.imagem) {
+      if (user.imagem) {
+        try {
+          const partes = user.imagem.split("/");
+          const publicId = partes.slice(-2).join("/").split(".")[0];
+          await cloudinary.uploader.destroy(publicId);
+        } catch (error) {
+          console.error("Erro ao deletar imagem antiga no Cloudinary:", error);
+        }
+      }
+      user.imagem = novaImg;
     }
     return await this.userRepositorio.save(user);
   }
