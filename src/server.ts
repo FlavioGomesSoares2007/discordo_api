@@ -11,14 +11,13 @@ const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT_WEB;
 
-const permitados = [
-  "https://discordo-cliente.vercel.app",
-  process.env.PRODUCAO,
-].filter((origin): origin is string => !!origin); 
-
 app.use(
   cors({
-    origin: permitados,
+    origin: [
+      "http://localhost:5173",
+      "http://192.168.100.8:5173",
+      "https://discordo-cliente.vercel.app",
+    ],
     methods: ["GET", "POST", "DELETE", "PATCH"],
   }),
 );
@@ -26,7 +25,11 @@ app.use(express.json());
 
 const io = new Server(server, {
   cors: {
-    origin: permitados,
+    origin: [
+      "http://localhost:5173",
+      "http://192.168.100.8:5173",
+      "https://discordo-cliente.vercel.app",
+    ],
     methods: ["GET", "POST", "DELETE", "PATCH"],
   },
 });
@@ -37,5 +40,5 @@ app.use(routes);
 socketEvents(io);
 
 server.listen(port, () => {
-  console.log(`Discordo no ar 🚀   ${permitados}`);
+  console.log(`Discordo no ar 🚀   http://localhost:${port}`);
 });
