@@ -11,13 +11,14 @@ const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT_WEB;
 
+const originPermitida =
+  process.env.NODE_ENV === "production"
+    ? "https://discordo-cliente.vercel.app"
+    : process.env.PRODUCAO;
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://192.168.100.4:5173",
-      "https://discordo-cliente.vercel.app",
-    ],
+    origin: originPermitida,
     methods: ["GET", "POST", "DELETE", "PATCH"],
   }),
 );
@@ -25,11 +26,7 @@ app.use(express.json());
 
 const io = new Server(server, {
   cors: {
-    origin: [
-      "http://localhost:5173",
-      "http://192.168.100.4:5173",
-      "https://discordo-cliente.vercel.app",
-    ],
+    origin: originPermitida,
     methods: ["GET", "POST", "DELETE", "PATCH"],
   },
 });
