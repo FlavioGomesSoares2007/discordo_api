@@ -11,8 +11,10 @@ const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT_WEB;
 
-const permitados =
-  process.env.PRODUCAO || "https://discordo-cliente.vercel.app";
+const permitados = [
+  "https://discordo-cliente.vercel.app",
+  process.env.PRODUCAO,
+].filter((origin): origin is string => !!origin); 
 
 app.use(
   cors({
