@@ -13,7 +13,10 @@ const port = process.env.PORT_WEB;
 
 app.use(
   cors({
-    origin: "https://discordo-cliente.vercel.app",
+    origin: [
+      "http://192.168.100.2:5173/",
+      "https://discordo-cliente.vercel.app",
+    ],
     methods: ["GET", "POST", "DELETE", "PATCH"],
   }),
 );
@@ -21,7 +24,10 @@ app.use(express.json());
 
 const io = new Server(server, {
   cors: {
-    origin: ["https://discordo-cliente.vercel.app"],
+    origin: [
+      "http://192.168.100.2:5173/",
+      "https://discordo-cliente.vercel.app",
+    ],
     methods: ["GET", "POST", "DELETE", "PATCH"],
   },
 });
