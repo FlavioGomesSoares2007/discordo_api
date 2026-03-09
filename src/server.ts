@@ -26,8 +26,11 @@ app.use(express.json());
 const io = new Server(server, {
   cors: {
     origin: [
+<<<<<<< Updated upstream
       "http://localhost:5173",
       "http://192.168.100.8:5173",
+=======
+>>>>>>> Stashed changes
       "https://discordo-cliente.vercel.app",
     ],
     methods: ["GET", "POST", "DELETE", "PATCH"],
