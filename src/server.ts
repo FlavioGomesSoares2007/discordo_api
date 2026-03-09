@@ -21,10 +21,7 @@ app.use(express.json());
 
 const io = new Server(server, {
   cors: {
-    origin: [
-      "http://localhost:5173",
-      "https://discordo-cliente.vercel.app",
-    ],
+    origin: ["https://discordo-cliente.vercel.app"],
     methods: ["GET", "POST", "DELETE", "PATCH"],
   },
 });
