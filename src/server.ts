@@ -13,7 +13,7 @@ const port = process.env.PORT_WEB;
 
 app.use(
   cors({
-    origin: "*",
+    origin: "https://discordo-cliente.vercel.app",
     methods: ["GET", "POST", "DELETE", "PATCH"],
   }),
 );
