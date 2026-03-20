@@ -21,7 +21,7 @@ app.use(express.json());
 
 const io = new Server(server, {
   cors: {
-    origin: ["https://discordo-cliente.vercel.app"],
+    origin: "*",
     methods: ["GET", "POST", "DELETE", "PATCH"],
   },
 });
@@ -31,6 +31,6 @@ app.use(routes);
 
 socketEvents(io);
 
-server.listen(port, () => {
+server.listen(port,  () => {
   console.log(`Discordo no ar 🚀   http://localhost:${port}`);
 });
